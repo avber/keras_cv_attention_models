@@ -409,7 +409,7 @@ def init_dataset(
     rescale_mode="torch",  # rescale mode, ["tf", "torch"], or specific `(mean, std)` like `(128.0, 128.0)`
     resize_method="bilinear",  # ["bilinear", "bicubic"]
     resize_antialias=False,
-    random_crop_mode=1.0,  # [augment] 0 for eval mode, (0, 1) for random crop, 1 for random largest crop, > 1 for random scale
+    random_crop_mode=0.0,  # [augment] 0 for eval mode, (0, 1) for random crop, 1 for random largest crop, > 1 for random scale
     mosaic_mix_prob=0.0,  # [augment] 0 for disable, > 0 for enable
     color_augment_method="random_hsv",  # [augment] one of ["random_hsv", "autoaug", "randaug"], or totally custom one like `lambda image: image`
     positional_augment_methods="rts",  # [augment] Positional augment method besides scale, combine of r: rotate, t: transplate, s: shear, x: scale_x + scale_y
@@ -510,7 +510,7 @@ def draw_bboxes(bboxes, ax=None):
 
 
 def show_image_with_bboxes(
-    image, bboxes, labels=None, confidences=None, is_bbox_width_first=False, ax=None, label_font_size=8, num_classes=80, indices_2_labels=None
+    image, bboxes, labels=None, confidences=None, is_bbox_width_first=False, ax=None, label_font_size=8, linewidth=2, num_classes=80, indices_2_labels=None
 ):
     import matplotlib.pyplot as plt
     import numpy as np
@@ -527,7 +527,7 @@ def show_image_with_bboxes(
         # bbox is [top, left, bottom, right]
         bb = [bb[0] * image.shape[0], bb[1] * image.shape[1], bb[2] * image.shape[0], bb[3] * image.shape[1]]
         bb = np.array(bb).astype("int32")
-        ax.plot(bb[[1, 1, 3, 3, 1]], bb[[0, 2, 2, 0, 0]])
+        ax.plot(bb[[1, 1, 3, 3, 1]], bb[[0, 2, 2, 0, 0]], linewidth=linewidth)
 
         if labels is not None:
             label = int(labels[id])
