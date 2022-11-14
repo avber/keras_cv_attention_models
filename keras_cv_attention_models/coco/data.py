@@ -4,6 +4,8 @@ from tensorflow import keras
 from keras_cv_attention_models.imagenet.data import init_mean_std_by_rescale_mode, tf_imread, random_crop_and_resize_image
 from keras_cv_attention_models.coco import anchors_func
 
+from tf_image.core.bboxes.resize import resize
+
 COCO_LABELS = """person, bicycle, car, motorcycle, airplane, bus, train, truck, boat, traffic light, fire hydrant, stop sign,
     parking meter, bench, bird, cat, dog, horse, sheep, cow, elephant, bear, zebra, giraffe, backpack, umbrella, handbag, tie,
     suitcase, frisbee, skis, snowboard, sports ball, kite, baseball bat, baseball glove, skateboard, surfboard, tennis racket,
@@ -291,8 +293,10 @@ class RandomProcessImageWithBboxes:
         if self.magnitude >= 0:
             image, bbox = random_flip_left_right_with_bboxes(image, bbox)
 
-        image, bbox = self.__random_crop_and_resize__(image, bbox)
-        bbox, label = refine_bboxes_labels_single(bbox, label)
+        image, bbox = resize(image, bbox, *self.target_shape[:2], keep_aspect_ratio=False, random_method=False)
+
+        #image, bbox = self.__random_crop_and_resize__(image, bbox)
+        #bbox, label = refine_bboxes_labels_single(bbox, label)
 
         if self.magnitude > 0:
             image.set_shape([*self.target_shape[:2], 3])
