@@ -293,10 +293,12 @@ class RandomProcessImageWithBboxes:
         if self.magnitude >= 0:
             image, bbox = random_flip_left_right_with_bboxes(image, bbox)
 
+        image = tf.cast(image, tf.uint8)
         image, bbox = resize(image, bbox, *self.target_shape[:2], keep_aspect_ratio=False, random_method=False)
+        image = tf.cast(image, "float32")  # [0, 255]
 
         #image, bbox = self.__random_crop_and_resize__(image, bbox)
-        #bbox, label = refine_bboxes_labels_single(bbox, label)
+        bbox, label = refine_bboxes_labels_single(bbox, label)
 
         if self.magnitude > 0:
             image.set_shape([*self.target_shape[:2], 3])
